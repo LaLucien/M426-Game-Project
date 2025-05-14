@@ -66,7 +66,7 @@ public class HeroKnight : MonoBehaviour {
             m_grounded = false;
             m_animator.SetBool("Grounded", m_grounded);
         }
-
+        
         // -- Handle input and movement --
         float inputX = Input.GetAxis("Horizontal");
 
@@ -83,9 +83,16 @@ public class HeroKnight : MonoBehaviour {
             m_facingDirection = -1;
         }
 
+        float InputY = Input.GetAxis("Vertical");
+
+
         // Move
-        if (!m_rolling )
-            m_body2d.linearVelocity = new Vector2(inputX * m_speed, m_body2d.linearVelocity.y);
+        /*if (!m_rolling )
+            m_body2d.linearVelocity = new Vector2(inputX * m_speed, m_body2d.linearVelocity.y);*/
+        if (!m_rolling)
+        {
+            m_body2d.linearVelocity = new Vector2(inputX * m_speed, InputY * m_speed);
+        }
 
         //Set AirSpeed in animator
         m_animator.SetFloat("AirSpeedY", m_body2d.linearVelocity.y);
