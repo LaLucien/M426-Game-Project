@@ -17,6 +17,7 @@ public class HeroKnight : MonoBehaviour {
     private Sensor_HeroKnight   m_wallSensorR2;
     private Sensor_HeroKnight   m_wallSensorL1;
     private Sensor_HeroKnight   m_wallSensorL2;
+    private Health              m_health;
     private bool                m_isWallSliding = false;
     private bool                m_grounded = false;
     private bool                m_rolling = false;
@@ -33,11 +34,27 @@ public class HeroKnight : MonoBehaviour {
     {
         m_animator = GetComponent<Animator>();
         m_body2d = GetComponent<Rigidbody2D>();
+        if (m_health != null)
+        {
+            m_health.OnHealthChanged += HandleHealthChanged;
+            m_health.OnDied += HandleDeath;
+        }
         m_groundSensor = transform.Find("GroundSensor").GetComponent<Sensor_HeroKnight>();
         m_wallSensorR1 = transform.Find("WallSensor_R1").GetComponent<Sensor_HeroKnight>();
         m_wallSensorR2 = transform.Find("WallSensor_R2").GetComponent<Sensor_HeroKnight>();
         m_wallSensorL1 = transform.Find("WallSensor_L1").GetComponent<Sensor_HeroKnight>();
         m_wallSensorL2 = transform.Find("WallSensor_L2").GetComponent<Sensor_HeroKnight>();
+        m_health = GetComponent<Health>();
+    }
+
+    private void HandleHealthChanged(int current, int max)
+    {
+        Debug.Log($"Hp: {current}/{max}");
+    }
+
+    private void HandleDeath()
+    {
+        Debug.Log("Dead");
     }
 
     // Update is called once per frame
