@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.InputSystem;
 
 public class HeroKnight : MonoBehaviour {
 
@@ -70,14 +71,20 @@ public class HeroKnight : MonoBehaviour {
         // -- Handle input and movement --
         float inputX = Input.GetAxis("Horizontal");
 
-        // Swap direction of sprite depending on walk direction
-        if (inputX > 0)
+        //Mouse position
+        Vector2 screenPositionMouse = Mouse.current.position.ReadValue();
+        Vector2 worldPositionMouse = Camera.main.ScreenToWorldPoint(screenPositionMouse);
+
+        float playerPositionX = m_body2d.position.x;
+
+        // Swap direction of sprite depending on mouse x position
+        if (worldPositionMouse.x > playerPositionX)
         {
             GetComponent<SpriteRenderer>().flipX = false;
             m_facingDirection = 1;
         }
             
-        else if (inputX < 0)
+        else if (worldPositionMouse.x < playerPositionX)
         {
             GetComponent<SpriteRenderer>().flipX = true;
             m_facingDirection = -1;
