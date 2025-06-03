@@ -54,7 +54,15 @@ public class HeroKnight : MonoBehaviour {
 
     private void Attack()
     {
-        Collider2D[] objs = Physics2D.OverlapCircleAll(m_attackPoint.position, m_attackRange, m_attackMask);
+        Vector2 actualAttackPosition = m_attackPoint.position;
+        if (m_facingDirection == 1)
+        {
+            actualAttackPosition.x = m_attackPoint.position.x + 2 * (Mathf.Abs(actualAttackPosition.x - this.transform.position.x));
+        }
+
+        Debug.Log($"Attack position {actualAttackPosition.x}, {actualAttackPosition.y}");
+
+        Collider2D[] objs = Physics2D.OverlapCircleAll(actualAttackPosition, m_attackRange, m_attackMask);
 
         foreach (Collider2D obj in objs)
         {
