@@ -2,7 +2,8 @@
 using System.Collections;
 using UnityEngine.InputSystem;
 
-public class HeroKnight : MonoBehaviour {
+public class HeroKnight : MonoBehaviour, IHurtable 
+{
 
     [SerializeField] float      m_speed = 4.0f;
     [SerializeField] float      m_jumpForce = 7.5f;
@@ -250,5 +251,10 @@ public class HeroKnight : MonoBehaviour {
             // Turn arrow in correct direction
             dust.transform.localScale = new Vector3(m_facingDirection, 1, 1);
         }
+    }
+
+    public void TakeDamage(float damageMultiplier = 1)
+    {
+        Debug.Log("damageTaken");
     }
 }
