@@ -1,12 +1,7 @@
 using UnityEngine;
 
-public class EnemyBehaviour : MonoBehaviour, IDamagable
+public class Enemy : MonoBehaviour
 {
-    public void Damage(float damageMultiplier = 1)
-    {
-        Debug.Log("Hit Enemy");
-    }
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
