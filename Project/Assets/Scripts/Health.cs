@@ -10,6 +10,7 @@ public class Health : MonoBehaviour
     public int CurrentHealth { get; private set; }
 
     // Events
+    public int MaxHealth => maxHealth;
     public event Action<int, int> OnHealthChanged; // (current, max)
     public event Action OnDied;
 
