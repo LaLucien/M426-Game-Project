@@ -2,6 +2,12 @@ using UnityEngine;
 
 public class EnemyBehaviour : MonoBehaviour, IDamagable
 {
+    public Rigidbody2D m_heroKnight; 
+    [SerializeField] private GameObject m_enemy;
+    private float m_speed = 0.004f;
+
+    private EnemyManagement manager;
+
     [SerializeField] private float m_attackRange;
     [SerializeField] LayerMask m_hurtableMask;
     [SerializeField] private float m_damageDealTimeout;
@@ -9,17 +15,23 @@ public class EnemyBehaviour : MonoBehaviour, IDamagable
     public void Damage(float damageMultiplier = 1)
     {
         Debug.Log("Hit Enemy");
+        Die();
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        if (m_heroKnight == null)
+        {
+            m_heroKnight = FindObjectOfType<HeroKnight>().GetComponent<Rigidbody2D>();
+        }
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        m_enemy.transform.position = Vector3.MoveTowards(m_enemy.transform.position, m_heroKnight.transform.position, m_speed);
         m_timeSinceLastDamageDealtSec += Time.deltaTime;
         if (m_timeSinceLastDamageDealtSec > m_damageDealTimeout)
         {
@@ -42,5 +54,15 @@ public class EnemyBehaviour : MonoBehaviour, IDamagable
                 hit.TakeDamage();
             }
         }
+    }
+
+    private void Die()
+    {
+        manager?.SpawnEnemy();
+        Destroy(gameObject);
+    }
+    public void SetManager(EnemyManagement mgr)
+    {
+        manager = mgr;
     }
 }

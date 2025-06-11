@@ -82,6 +82,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d07919a61432ce41b8ca8429776bc00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_heroKnight: {fileID: 0}
+  m_enemy: {fileID: 6385882119030237022}
+  m_attackRange: 0
+  m_hurtableMask:
+    serializedVersion: 2
+    m_Bits: 0
+  m_damageDealTimeout: 0
 --- !u!1001 &8544168470078273585
 PrefabInstance:
   m_ObjectHideFlags: 0
