@@ -2,13 +2,19 @@
 using System.Collections;
 using UnityEngine.InputSystem;
 
-public class HeroKnight : MonoBehaviour {
+public class HeroKnight : MonoBehaviour, IHurtable 
+{
 
     [SerializeField] float      m_speed = 4.0f;
     [SerializeField] float      m_jumpForce = 7.5f;
     [SerializeField] float      m_rollForce = 6.0f;
     [SerializeField] bool       m_noBlood = false;
     [SerializeField] GameObject m_slideDust;
+
+    [Header("Attack Properties")]
+    [SerializeField] private Transform m_attackPoint;
+    [SerializeField] private float m_attackRange;
+    [SerializeField] private LayerMask m_attackMask;
 
     private Animator            m_animator;
     private Rigidbody2D         m_body2d;
@@ -45,6 +51,27 @@ public class HeroKnight : MonoBehaviour {
         m_wallSensorL1 = transform.Find("WallSensor_L1").GetComponent<Sensor_HeroKnight>();
         m_wallSensorL2 = transform.Find("WallSensor_L2").GetComponent<Sensor_HeroKnight>();
         m_health = GetComponent<Health>();
+    }
+
+    private void Attack()
+    {
+        Vector2 actualAttackPosition = m_attackPoint.position;
+        if (m_facingDirection == 1)
+        {
+            actualAttackPosition.x = m_attackPoint.position.x + 2 * (Mathf.Abs(actualAttackPosition.x - this.transform.position.x));
+        }
+
+        Debug.Log($"Attack position {actualAttackPosition.x}, {actualAttackPosition.y}");
+
+        Collider2D[] objs = Physics2D.OverlapCircleAll(actualAttackPosition, m_attackRange, m_attackMask);
+
+        foreach (Collider2D obj in objs)
+        {
+            if (obj.TryGetComponent(out IDamagable hit))
+            {
+                hit.Damage();
+            }
+        }
     }
 
     private void HandleHealthChanged(int current, int max)
@@ -155,6 +182,8 @@ public class HeroKnight : MonoBehaviour {
 
             // Reset timer
             m_timeSinceAttack = 0.0f;
+
+            Attack();
         }
 
         // Block
@@ -222,5 +251,10 @@ public class HeroKnight : MonoBehaviour {
             // Turn arrow in correct direction
             dust.transform.localScale = new Vector3(m_facingDirection, 1, 1);
         }
+    }
+
+    public void TakeDamage(float damageMultiplier = 1)
+    {
+        Debug.Log("damageTaken");
     }
 }
