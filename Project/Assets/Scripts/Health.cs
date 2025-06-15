@@ -8,6 +8,7 @@ public class Health : MonoBehaviour, IDamageable
     [SerializeField] private int maxHealth = 100;
     [SerializeField] private bool useAnimation = true;
     public int CurrentHealth { get; private set; }
+    public int MaxHealth => maxHealth;
 
     // Events
     public event Action<int, int> OnHealthChanged; // (current, max)
