@@ -1,21 +1,26 @@
 using UnityEngine;
 
-public class EnemyBehaviour : MonoBehaviour, IDamagable
+
+[RequireComponent(typeof(Health))]
+public class EnemyBehaviour : MonoBehaviour
 {
-    public Rigidbody2D m_heroKnight; 
+    public Rigidbody2D m_heroKnight;
     [SerializeField] private GameObject m_enemy;
     private float m_speed = 0.004f;
 
-    private EnemyManagement manager;
+    private EnemyManagement m_manager;
+    private Health m_health;
 
     [SerializeField] private float m_attackRange;
     [SerializeField] LayerMask m_hurtableMask;
     [SerializeField] private float m_damageDealTimeout;
+    [SerializeField] private int m_attackDamage = 10;
     private float m_timeSinceLastDamageDealtSec = 0f;
-    public void Damage(float damageMultiplier = 1)
+
+    private void Awake()
     {
-        Debug.Log("Hit Enemy");
-        Die();
+        m_health = GetComponent<Health>();
+        m_health.OnDied += HandleDeath;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -23,9 +28,8 @@ public class EnemyBehaviour : MonoBehaviour, IDamagable
     {
         if (m_heroKnight == null)
         {
-            m_heroKnight = FindObjectOfType<HeroKnight>().GetComponent<Rigidbody2D>();
+            m_heroKnight = Object.FindFirstObjectByType<HeroKnight>()?.GetComponent<Rigidbody2D>();
         }
-
     }
 
     // Update is called once per frame
@@ -38,31 +42,30 @@ public class EnemyBehaviour : MonoBehaviour, IDamagable
             DealDamage();
             m_timeSinceLastDamageDealtSec = 0f;
         }
-        
     }
 
     private void DealDamage()
     {
-
         Collider2D[] objs = Physics2D.OverlapCircleAll(this.transform.position, m_attackRange, m_hurtableMask);
 
         foreach (Collider2D obj in objs)
         {
-            if (obj.TryGetComponent(out IHurtable hit))
+            if (obj.TryGetComponent(out IDamageable hit))
             {
                 Debug.Log($"Attackedby {this.transform.position.x}, {this.transform.position.y}");
-                hit.TakeDamage();
+                hit.TakeDamage(m_attackDamage);
             }
         }
     }
 
-    private void Die()
+    private void HandleDeath()
     {
-        manager?.SpawnEnemy();
+        m_manager?.SpawnEnemy();
         Destroy(gameObject);
     }
+
     public void SetManager(EnemyManagement mgr)
     {
-        manager = mgr;
+        m_manager = mgr;
     }
 }

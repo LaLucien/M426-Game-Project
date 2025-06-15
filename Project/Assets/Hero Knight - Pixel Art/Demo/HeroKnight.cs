@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.InputSystem;
 
-public class HeroKnight : MonoBehaviour, IHurtable 
+public class HeroKnight : MonoBehaviour
 {
 
     [SerializeField] float      m_speed = 4.0f;
@@ -15,6 +15,7 @@ public class HeroKnight : MonoBehaviour, IHurtable
     [SerializeField] private Transform m_attackPoint;
     [SerializeField] private float m_attackRange;
     [SerializeField] private LayerMask m_attackMask;
+    [SerializeField] private int m_attackDamage = 10;
 
     private Animator            m_animator;
     private Rigidbody2D         m_body2d;
@@ -40,6 +41,7 @@ public class HeroKnight : MonoBehaviour, IHurtable
     {
         m_animator = GetComponent<Animator>();
         m_body2d = GetComponent<Rigidbody2D>();
+        m_health = GetComponent<Health>();
         if (m_health != null)
         {
             m_health.OnHealthChanged += HandleHealthChanged;
@@ -50,7 +52,6 @@ public class HeroKnight : MonoBehaviour, IHurtable
         m_wallSensorR2 = transform.Find("WallSensor_R2").GetComponent<Sensor_HeroKnight>();
         m_wallSensorL1 = transform.Find("WallSensor_L1").GetComponent<Sensor_HeroKnight>();
         m_wallSensorL2 = transform.Find("WallSensor_L2").GetComponent<Sensor_HeroKnight>();
-        m_health = GetComponent<Health>();
     }
 
     private void Attack()
@@ -63,13 +64,13 @@ public class HeroKnight : MonoBehaviour, IHurtable
 
         Debug.Log($"Attack position {actualAttackPosition.x}, {actualAttackPosition.y}");
 
-        Collider2D[] objs = Physics2D.OverlapCircleAll(actualAttackPosition, m_attackRange, m_attackMask);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(actualAttackPosition, m_attackRange, m_attackMask);
 
-        foreach (Collider2D obj in objs)
+        foreach (Collider2D hit in hits)
         {
-            if (obj.TryGetComponent(out IDamagable hit))
+            if (hit.TryGetComponent(out IDamageable target))
             {
-                hit.Damage();
+                target.TakeDamage(m_attackDamage);
             }
         }
     }
@@ -251,10 +252,5 @@ public class HeroKnight : MonoBehaviour, IHurtable
             // Turn arrow in correct direction
             dust.transform.localScale = new Vector3(m_facingDirection, 1, 1);
         }
-    }
-
-    public void TakeDamage(float damageMultiplier = 1)
-    {
-        Debug.Log("damageTaken");
     }
 }
