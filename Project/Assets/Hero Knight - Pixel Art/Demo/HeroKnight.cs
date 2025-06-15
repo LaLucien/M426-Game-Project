@@ -28,6 +28,7 @@ public class HeroKnight : MonoBehaviour
     private bool                m_isWallSliding = false;
     private bool                m_grounded = false;
     private bool                m_rolling = false;
+    private bool                m_isDead = false;
     private int                 m_facingDirection = 1;
     private int                 m_currentAttack = 0;
     private float               m_timeSinceAttack = 0.0f;
@@ -82,12 +83,29 @@ public class HeroKnight : MonoBehaviour
 
     private void HandleDeath()
     {
-        Debug.Log("Dead");
+        if (!m_isDead)
+        {
+            m_isDead = true;
+            Debug.Log("Hero Knight has died!");
+
+            // Death animation is handled in the health script
+            // I think it makes sense, but may be worth considering moving it here if we want more control.
+
+            // Disable player movement and physics interactions
+            m_body2d.linearVelocity = Vector2.zero;
+            m_body2d.bodyType = RigidbodyType2D.Kinematic;
+
+            // TODO: Handle game over logic, e.g., show game over screen, reset level, etc.
+            // GameManager.Instance.GameOver();
+        }
     }
 
     // Update is called once per frame
     void Update ()
     {
+        if (m_isDead)
+            return; // Do not update if the hero is dead
+
         // Increase timer that controls attack combo
         m_timeSinceAttack += Time.deltaTime;
 
