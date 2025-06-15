@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 1931996840472655936}
   - component: {fileID: 5052196353399223386}
   - component: {fileID: 3994352062575032860}
+  - component: {fileID: 2124329834670278015}
+  - component: {fileID: 1752980266471137018}
   m_Layer: 6
   m_Name: Enemy
   m_TagString: Untagged
@@ -82,13 +84,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d07919a61432ce41b8ca8429776bc00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_heroKnight: {fileID: 0}
-  m_enemy: {fileID: 6385882119030237022}
-  m_attackRange: 0
+  m_speed: 1
+  m_attackRange: 2
   m_hurtableMask:
     serializedVersion: 2
+    m_Bits: 128
+  m_attackInterval: 3
+  m_attackDamage: 10
+--- !u!114 &2124329834670278015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6385882119030237022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b5bac218a2a8ec4ab9c14f40c1a3621, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 20
+  useAnimation: 0
+--- !u!50 &1752980266471137018
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6385882119030237022}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
     m_Bits: 0
-  m_damageDealTimeout: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 0
 --- !u!1001 &8544168470078273585
 PrefabInstance:
   m_ObjectHideFlags: 0
