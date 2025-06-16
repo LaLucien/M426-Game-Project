@@ -2,7 +2,7 @@
 using UnityEngine;
 using System;
 
-public class Health : MonoBehaviour
+public class Health : MonoBehaviour, IDamageable
 {
     [Header("Health Settings")]
     [SerializeField] private int maxHealth = 100;

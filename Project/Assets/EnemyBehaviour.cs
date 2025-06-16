@@ -1,68 +1,75 @@
 using UnityEngine;
 
-public class EnemyBehaviour : MonoBehaviour, IDamagable
+
+[RequireComponent(typeof(Health))]
+public class EnemyBehaviour : MonoBehaviour
 {
-    public Rigidbody2D m_heroKnight; 
-    [SerializeField] private GameObject m_enemy;
-    private float m_speed = 0.004f;
-
-    private EnemyManagement manager;
-
+    [SerializeField] private float m_speed = 0.004f;
     [SerializeField] private float m_attackRange;
     [SerializeField] LayerMask m_hurtableMask;
-    [SerializeField] private float m_damageDealTimeout;
-    private float m_timeSinceLastDamageDealtSec = 0f;
-    public void Damage(float damageMultiplier = 1)
-    {
-        Debug.Log("Hit Enemy");
-        Die();
-    }
+    [SerializeField] private float m_attackInterval = 3;
+    [SerializeField] private int m_attackDamage = 10;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        if (m_heroKnight == null)
-        {
-            m_heroKnight = FindObjectOfType<HeroKnight>().GetComponent<Rigidbody2D>();
-        }
+    private float m_timeSinceLastAttack = 0f;
+    private Transform m_heroTransform;
+    private Health m_health;
+    private EnemyManagement m_manager;
 
+    // Start is called before the first frame update
+    private void Start()
+    {
+        m_heroTransform = Object.FindFirstObjectByType<HeroKnight>()?.transform;
+        if (m_heroTransform == null)
+            Debug.LogError("No HeroKnight in scene!");
+
+        m_health = GetComponent<Health>();
+        m_health.OnDied += HandleDeath;
     }
 
     // Update is called once per frame
     void Update()
     {
-        m_enemy.transform.position = Vector3.MoveTowards(m_enemy.transform.position, m_heroKnight.transform.position, m_speed);
-        m_timeSinceLastDamageDealtSec += Time.deltaTime;
-        if (m_timeSinceLastDamageDealtSec > m_damageDealTimeout)
-        {
-            DealDamage();
-            m_timeSinceLastDamageDealtSec = 0f;
-        }
-        
+        // Move *this* enemy toward the hero
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            m_heroTransform.position,
+            m_speed * Time.deltaTime);
+
+        // Individual cooldown
+        m_timeSinceLastAttack += Time.deltaTime;
+        if (m_timeSinceLastAttack >= m_attackInterval)
+            TryAttack();
     }
 
-    private void DealDamage()
+    private void TryAttack()
     {
+        var hits = Physics2D.OverlapCircleAll(
+        transform.position,
+        m_attackRange,
+        m_hurtableMask);
 
-        Collider2D[] objs = Physics2D.OverlapCircleAll(this.transform.position, m_attackRange, m_hurtableMask);
-
-        foreach (Collider2D obj in objs)
+        bool didHit = false;
+        foreach (var col in hits)
         {
-            if (obj.TryGetComponent(out IHurtable hit))
+            if (col.TryGetComponent<IDamageable>(out var target))
             {
-                Debug.Log($"Attackedby {this.transform.position.x}, {this.transform.position.y}");
-                hit.TakeDamage();
+                target.TakeDamage(m_attackDamage);
+                didHit = true;
             }
         }
+
+        if (didHit)
+            m_timeSinceLastAttack = 0f;
     }
 
-    private void Die()
+    private void HandleDeath()
     {
-        manager?.SpawnEnemy();
+        m_manager?.SpawnEnemy();
         Destroy(gameObject);
     }
+
     public void SetManager(EnemyManagement mgr)
     {
-        manager = mgr;
+        m_manager = mgr;
     }
 }

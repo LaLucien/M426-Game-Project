@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.InputSystem;
 
-public class HeroKnight : MonoBehaviour, IHurtable 
+public class HeroKnight : MonoBehaviour
 {
 
     [SerializeField] float      m_speed = 4.0f;
@@ -15,6 +15,7 @@ public class HeroKnight : MonoBehaviour, IHurtable
     [SerializeField] private Transform m_attackPoint;
     [SerializeField] private float m_attackRange;
     [SerializeField] private LayerMask m_attackMask;
+    [SerializeField] private int m_attackDamage = 10;
 
     private Animator            m_animator;
     private Rigidbody2D         m_body2d;
@@ -27,6 +28,7 @@ public class HeroKnight : MonoBehaviour, IHurtable
     private bool                m_isWallSliding = false;
     private bool                m_grounded = false;
     private bool                m_rolling = false;
+    private bool                m_isDead = false;
     private int                 m_facingDirection = 1;
     private int                 m_currentAttack = 0;
     private float               m_timeSinceAttack = 0.0f;
@@ -40,6 +42,7 @@ public class HeroKnight : MonoBehaviour, IHurtable
     {
         m_animator = GetComponent<Animator>();
         m_body2d = GetComponent<Rigidbody2D>();
+        m_health = GetComponent<Health>();
         if (m_health != null)
         {
             m_health.OnHealthChanged += HandleHealthChanged;
@@ -50,7 +53,6 @@ public class HeroKnight : MonoBehaviour, IHurtable
         m_wallSensorR2 = transform.Find("WallSensor_R2").GetComponent<Sensor_HeroKnight>();
         m_wallSensorL1 = transform.Find("WallSensor_L1").GetComponent<Sensor_HeroKnight>();
         m_wallSensorL2 = transform.Find("WallSensor_L2").GetComponent<Sensor_HeroKnight>();
-        m_health = GetComponent<Health>();
     }
 
     private void Attack()
@@ -63,13 +65,13 @@ public class HeroKnight : MonoBehaviour, IHurtable
 
         Debug.Log($"Attack position {actualAttackPosition.x}, {actualAttackPosition.y}");
 
-        Collider2D[] objs = Physics2D.OverlapCircleAll(actualAttackPosition, m_attackRange, m_attackMask);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(actualAttackPosition, m_attackRange, m_attackMask);
 
-        foreach (Collider2D obj in objs)
+        foreach (Collider2D hit in hits)
         {
-            if (obj.TryGetComponent(out IDamagable hit))
+            if (hit.TryGetComponent(out IDamageable target))
             {
-                hit.Damage();
+                target.TakeDamage(m_attackDamage);
             }
         }
     }
@@ -81,12 +83,29 @@ public class HeroKnight : MonoBehaviour, IHurtable
 
     private void HandleDeath()
     {
-        Debug.Log("Dead");
+        if (!m_isDead)
+        {
+            m_isDead = true;
+            Debug.Log("Hero Knight has died!");
+
+            // Death animation is handled in the health script
+            // I think it makes sense, but may be worth considering moving it here if we want more control.
+
+            // Disable player movement and physics interactions
+            m_body2d.linearVelocity = Vector2.zero;
+            m_body2d.bodyType = RigidbodyType2D.Kinematic;
+
+            // TODO: Handle game over logic, e.g., show game over screen, reset level, etc.
+            // GameManager.Instance.GameOver();
+        }
     }
 
     // Update is called once per frame
     void Update ()
     {
+        if (m_isDead)
+            return; // Do not update if the hero is dead
+
         // Increase timer that controls attack combo
         m_timeSinceAttack += Time.deltaTime;
 
@@ -251,10 +270,5 @@ public class HeroKnight : MonoBehaviour, IHurtable
             // Turn arrow in correct direction
             dust.transform.localScale = new Vector3(m_facingDirection, 1, 1);
         }
-    }
-
-    public void TakeDamage(float damageMultiplier = 1)
-    {
-        Debug.Log("damageTaken");
     }
 }
