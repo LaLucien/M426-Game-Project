@@ -8,7 +8,7 @@ public class MainMenu : MonoBehaviour
 {
 
     //Make sure to attach these Buttons in the Inspector
-    public Button m_PlayerOne, m_PlayerTwo, m_PlayerThree;
+    public Button m_PlayerOne, m_PlayerTwo, m_PlayerThree, m_Quit;
     [SerializeField] TMP_Text m_PlayerOneText;
     [SerializeField] TMP_Text m_PlayerTwoText;
     [SerializeField] TMP_Text m_PlayerThreeText;
@@ -26,6 +26,7 @@ public class MainMenu : MonoBehaviour
         m_PlayerOne.onClick.AddListener(()=>TaskOnClick(0));
         m_PlayerTwo.onClick.AddListener(()=>TaskOnClick(1));
         m_PlayerThree.onClick.AddListener(()=>TaskOnClick(2));
+        m_Quit.onClick.AddListener(() => Application.Quit());
 
     }
 
