@@ -49,6 +49,7 @@ public class StorageManager : MonoBehaviour
     public void WritePlayerData(int playerId, PlayerData data)
     {
         // Work with JSON
+        data.PlayerId = playerId;
         var gameData = JsonUtility.FromJson<PlayerDataList>(File.ReadAllText(saveFile));
         if (gameData is not null)
         {
@@ -64,7 +65,7 @@ public class StorageManager : MonoBehaviour
         else
         {
             gameData = new PlayerDataList();
-            gameData.Players.Add(data);
+            gameData.Players = new List<PlayerData>() { data};
         }
 
 

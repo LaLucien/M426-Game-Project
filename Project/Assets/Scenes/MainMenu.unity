@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 219989239}
   - component: {fileID: 219989238}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PlayerTwoText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -268,6 +268,7 @@ GameObject:
   - component: {fileID: 578930848}
   - component: {fileID: 578930847}
   - component: {fileID: 578930851}
+  - component: {fileID: 578930852}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -375,6 +376,21 @@ MonoBehaviour:
   m_PlayerOne: {fileID: 1765423928}
   m_PlayerTwo: {fileID: 1312096270}
   m_PlayerThree: {fileID: 930462232}
+  m_PlayerOneText: {fileID: 2115649258}
+  m_PlayerTwoText: {fileID: 219989238}
+  m_PlayerThreeText: {fileID: 939551255}
+--- !u!114 &578930852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 578930846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15709801b69f78c49b347ada8f8ec42c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &903161047
 GameObject:
   m_ObjectHideFlags: 0
@@ -490,8 +506,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -90}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 0, y: -80}
+  m_SizeDelta: {x: 400, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &930462232
 MonoBehaviour:
@@ -587,7 +603,7 @@ GameObject:
   - component: {fileID: 939551256}
   - component: {fileID: 939551255}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PlayerThreeText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -884,8 +900,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1, y: -43}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 400, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1312096270
 MonoBehaviour:
@@ -1005,8 +1021,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2, y: 0}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 0, y: 80}
+  m_SizeDelta: {x: 400, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1765423928
 MonoBehaviour:
@@ -1051,19 +1067,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1765423929}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11500000, guid: cec457786f374a14e8608acdafa32a1a, type: 3}
-        m_TargetAssemblyTypeName: UnityEngine.Object, UnityEngine
-        m_MethodName: set_name
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: TaskOnClick
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1765423929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1114,7 +1118,7 @@ GameObject:
   - component: {fileID: 2115649259}
   - component: {fileID: 2115649258}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PlayerOneText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

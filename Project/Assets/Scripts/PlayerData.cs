@@ -8,6 +8,7 @@ public class PlayerData
     public string Name = string.Empty;
     public int Highscore = 0;
     public int PlayerId = 0;
+    public int Score = 0;
 }
 
 [Serializable]

@@ -39,7 +39,7 @@ public class HeroKnight : MonoBehaviour
     private float               m_rollDuration = 8.0f / 14.0f;
     private float               m_rollCurrentTime;
     private PlayerData m_playerData;
-    private int m_score = 0;
+    //private int m_score = 0;
 
 
     // Use this for initialization
@@ -53,7 +53,8 @@ public class HeroKnight : MonoBehaviour
         Debug.Log($"Player {StaticClass.Player}");
         m_playerData = m_storageManager.ReadData(StaticClass.Player);
         Debug.Log($"Highscore {m_playerData.Highscore}");
-        m_scoreDisplay.UpdateText(m_score, m_playerData.Highscore);
+        m_playerData.Score = 0;
+        m_scoreDisplay.UpdateText(m_playerData);
         if (m_health != null)
         {
             m_health.OnHealthChanged += HandleHealthChanged;
@@ -85,10 +86,10 @@ public class HeroKnight : MonoBehaviour
             if (hit.TryGetComponent(out IDamageable target))
             {
                 target.TakeDamage(m_attackDamage);
-                m_score += 1;
-                if (m_score > m_playerData.Highscore)
+                m_playerData.Score += 1;
+                if (m_playerData.Score > m_playerData.Highscore)
                 {
-                    m_playerData.Highscore = m_score;
+                    m_playerData.Highscore = m_playerData.Score;
                 }
             }
         }
@@ -116,7 +117,7 @@ public class HeroKnight : MonoBehaviour
             // TODO: Handle game over logic, e.g., show game over screen, reset level, etc.
             // GameManager.Instance.GameOver();
             m_storageManager.WritePlayerData(StaticClass.Player, m_playerData);
-            SceneManager.LoadScene("MainMenu");
+            SceneManager.LoadScene("GameOver");
         }
     }
 
@@ -272,7 +273,7 @@ public class HeroKnight : MonoBehaviour
         }
 
         // Update Score
-        m_scoreDisplay.UpdateText(m_score, m_playerData.Highscore);
+        m_scoreDisplay.UpdateText(m_playerData);
 
     }
 
