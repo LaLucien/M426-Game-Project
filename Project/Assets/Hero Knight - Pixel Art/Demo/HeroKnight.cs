@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class HeroKnight : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class HeroKnight : MonoBehaviour
     [SerializeField] private float m_attackRange;
     [SerializeField] private LayerMask m_attackMask;
     [SerializeField] private int m_attackDamage = 10;
+    private StorageManager m_storageManager;
+    private ScoreDisplay m_scoreDisplay;
 
     private Animator            m_animator;
     private Rigidbody2D         m_body2d;
@@ -35,6 +38,8 @@ public class HeroKnight : MonoBehaviour
     private float               m_delayToIdle = 0.0f;
     private float               m_rollDuration = 8.0f / 14.0f;
     private float               m_rollCurrentTime;
+    private PlayerData m_playerData;
+    private int m_score = 0;
 
 
     // Use this for initialization
@@ -43,6 +48,12 @@ public class HeroKnight : MonoBehaviour
         m_animator = GetComponent<Animator>();
         m_body2d = GetComponent<Rigidbody2D>();
         m_health = GetComponent<Health>();
+        m_storageManager = GetComponent<StorageManager>();
+        m_scoreDisplay = GetComponent<ScoreDisplay>();
+        Debug.Log($"Player {StaticClass.Player}");
+        m_playerData = m_storageManager.ReadData(StaticClass.Player);
+        Debug.Log($"Highscore {m_playerData.Highscore}");
+        m_scoreDisplay.UpdateText(m_score, m_playerData.Highscore);
         if (m_health != null)
         {
             m_health.OnHealthChanged += HandleHealthChanged;
@@ -53,6 +64,8 @@ public class HeroKnight : MonoBehaviour
         m_wallSensorR2 = transform.Find("WallSensor_R2").GetComponent<Sensor_HeroKnight>();
         m_wallSensorL1 = transform.Find("WallSensor_L1").GetComponent<Sensor_HeroKnight>();
         m_wallSensorL2 = transform.Find("WallSensor_L2").GetComponent<Sensor_HeroKnight>();
+
+
     }
 
     private void Attack()
@@ -72,6 +85,11 @@ public class HeroKnight : MonoBehaviour
             if (hit.TryGetComponent(out IDamageable target))
             {
                 target.TakeDamage(m_attackDamage);
+                m_score += 1;
+                if (m_score > m_playerData.Highscore)
+                {
+                    m_playerData.Highscore = m_score;
+                }
             }
         }
     }
@@ -97,6 +115,8 @@ public class HeroKnight : MonoBehaviour
 
             // TODO: Handle game over logic, e.g., show game over screen, reset level, etc.
             // GameManager.Instance.GameOver();
+            m_storageManager.WritePlayerData(StaticClass.Player, m_playerData);
+            SceneManager.LoadScene("MainMenu");
         }
     }
 
@@ -250,6 +270,10 @@ public class HeroKnight : MonoBehaviour
                 if(m_delayToIdle < 0)
                     m_animator.SetInteger("AnimState", 0);
         }
+
+        // Update Score
+        m_scoreDisplay.UpdateText(m_score, m_playerData.Highscore);
+
     }
 
     // Animation Events
