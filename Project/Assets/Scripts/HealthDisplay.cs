@@ -20,8 +20,8 @@ public class HealthDisplay : MonoBehaviour
     }
 
     private void UpdateText(int current, int max)
-        => m_healthText.text = $"Health:\n{current}/{max}";
+        => m_healthText.text = $"Health: {current}/{max}";
 
     private void OnDeath()
-        => m_healthText.text = "Health:\n DEAD";
+        => m_healthText.text = "Health: DEAD";
 }
