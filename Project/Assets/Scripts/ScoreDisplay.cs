@@ -20,7 +20,7 @@ public class ScoreDisplay : MonoBehaviour
     //}
 
     public void UpdateText(PlayerData playerData)
-        => m_scoreText.text = $"Score: {playerData.Score}, Highscore: {playerData.Highscore}";
+        => m_scoreText.text = $"Score: {playerData.Score}\nHighscore: {playerData.Highscore}";
 
     
 }
